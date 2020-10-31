@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 
 CASES = 'Cases'
@@ -16,8 +17,8 @@ def plot_countries(countries=['US'], days=7, mode=CASES, filename=None):
 
 def load_relevant_data(us_data=True, mode=CASES):
 	# This can be changed to your local directory (./) for testing purposes
-	#BASE_PATH = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/'
-	BASE_PATH = './data/'
+	BASE_PATH = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/'
+	#BASE_PATH = './data/'
 	if us_data and mode == CASES:
 		PATH = BASE_PATH + 'time_series_covid19_confirmed_US.csv'
 	elif us_data and mode == DEATHS:
@@ -30,13 +31,17 @@ def load_relevant_data(us_data=True, mode=CASES):
 	return pd.read_csv(PATH)
 
 def plot_data(df, places, days, mode, column, filename):
-	for place in places:
+	n = len(places)
+	colors = plt.cm.Oranges(np.linspace(0.35,0.65,n))
+
+	for index, place in enumerate(places):
 		cumulative_data = df[df[column] == place]
 		counts = cumulative_data.diff(axis=1) # Converts from total case count to daily case count
 		x_values = list(counts.columns[-days:])
 		y_values = [int(counts[col]) for col in x_values]
 
-		plt.plot(x_values, y_values, label=place)
+		plt.plot(x_values, y_values, label=place, color=colors[index], linewidth=2)
+
 
 	label_figure(x_values, y_values, mode, filename)
 
@@ -48,6 +53,7 @@ def label_figure(x_values, y_values, mode, filename):
 	plt.xlabel("Date (MM/DD/YY)")
 	plt.ylabel(f"{mode}")
 	plt.legend()
+	#plt.set_cmap("magma")
 	filename = filename if filename else f'{mode}_last_{days}.png'
 	plt.savefig(filename)
 	plt.close()

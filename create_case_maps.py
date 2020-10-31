@@ -10,7 +10,7 @@ from time_series_analysis import load_relevant_data
 
 yesterday = (datetime.today() - timedelta(days=1)).strftime("%m/%d/%y")
 # Uncomment below line for testing
-yesterday = "10/10/20"
+#yesterday = "10/10/20"
 
 def plot_usa_case_map(filename=None):
 	df = load_relevant_data()
@@ -41,7 +41,7 @@ def create_usa_figure(df, filename):
                     #height=500,
                     range_color=[0,3000])
 
-	fig.update_layout(margin=dict(l=0, r=0, t=70, b=0), title={"font": {"size": 40}, "x":0.5},)
+	fig.update_layout(margin=dict(l=0, r=0, t=70, b=0), title={"font": {"size": 20}, "x":0.5},)
 	# fig.show()
 	filename = filename if filename else "usa_chart.png"
 	fig.write_image(filename, engine='kaleido')
@@ -64,7 +64,7 @@ def create_global_figure(df, filename):
                     #height=500,
                     range_color=[0,50000])
 
-	fig.update_layout(margin=dict(l=0, r=0, t=70, b=0), title={"font": {"size": 40}, "x":0.5},)
+	fig.update_layout(margin=dict(l=0, r=0, t=70, b=20), title={"font": {"size": 20}, "x":0.5},)
 	# fig.show()
 	filename = filename if filename else "global_chart.png"
 	fig.write_image(filename, engine='kaleido')
