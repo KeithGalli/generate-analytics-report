@@ -1,49 +1,45 @@
+# Python libraries
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from datetime import datetime, timedelta
 
-CASES = 'Cases'
-DEATHS = 'Deaths'
+# Local files
+from helper import Mode, load_relevant_data
 
-def plot_states(states=['Massachusetts'], days=7, mode=CASES, filename=None):
+def plot_states(states=['Massachusetts'], days=7, mode=Mode.CASES, filename=None, end_date=None):
 	COLUMN = 'Province_State'
 	df = load_relevant_data(True, mode).groupby(COLUMN).sum().reset_index()
-	plot_data(df, states, days, mode, COLUMN, filename)
+	plot_data(df, states, days, mode, COLUMN, filename, end_date)
 
-def plot_countries(countries=['US'], days=7, mode=CASES, filename=None):
+def plot_countries(countries=['US'], days=7, mode=Mode.CASES, filename=None, end_date=None):
 	COLUMN = 'Country/Region'
 	df = load_relevant_data(False, mode).groupby(COLUMN).sum().reset_index()
-	plot_data(df, countries, days, mode, COLUMN, filename)
+	plot_data(df, countries, days, mode, COLUMN, filename, end_date)
 
-def load_relevant_data(us_data=True, mode=CASES):
-	# This can be changed to your local directory (./) for testing purposes
-	BASE_PATH = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/'
-	#BASE_PATH = './data/'
-	if us_data and mode == CASES:
-		PATH = BASE_PATH + 'time_series_covid19_confirmed_US.csv'
-	elif us_data and mode == DEATHS:
-		PATH = BASE_PATH + 'time_series_covid19_deaths_US.csv'
-	elif not us_data and mode == CASES:
-		PATH = BASE_PATH + 'time_series_covid19_confirmed_global.csv'
-	elif not us_data and mode == DEATHS:
-		PATH = BASE_PATH + 'time_series_covid19_deaths_global.csv'
-
-	return pd.read_csv(PATH)
-
-def plot_data(df, places, days, mode, column, filename):
+def plot_data(df, places, days, mode, column, filename, end_date):
 	n = len(places)
 	colors = plt.cm.Oranges(np.linspace(0.35,0.65,n))
+
+	offset = get_end_date_offset(df, end_date) if end_date else 0
 
 	for index, place in enumerate(places):
 		cumulative_data = df[df[column] == place]
 		counts = cumulative_data.diff(axis=1) # Converts from total case count to daily case count
-		x_values = list(counts.columns[-days:])
+		x_values = list(counts.columns[-days-offset:len(counts.columns)-offset])
 		y_values = [int(counts[col]) for col in x_values]
 
 		plt.plot(x_values, y_values, label=place, color=colors[index], linewidth=2)
 
-
 	label_figure(x_values, y_values, mode, filename)
+
+def get_end_date_offset(df, end_date):
+	date_format =  "%m/%d/%y"
+	end = datetime.strptime(end_date, date_format)
+	last_column = datetime.strptime(df.columns[-1], date_format)
+	offset = max(0, (last_column-end).days)
+	return offset
+
 
 def label_figure(x_values, y_values, mode, filename):
 	days = len(x_values)
@@ -53,7 +49,12 @@ def label_figure(x_values, y_values, mode, filename):
 	plt.xlabel("Date (MM/DD/YY)")
 	plt.ylabel(f"{mode}")
 	plt.legend()
-	#plt.set_cmap("magma")
 	filename = filename if filename else f'{mode}_last_{days}.png'
 	plt.savefig(filename)
 	plt.close()
+
+if __name__ == '__main__':
+	plot_states(filename="state-line-chart-test.png")
+
+	countries = ["US", "India", "Brazil"]
+	plot_countries(countries, days=100, filename="country-line-chart-test.png")
