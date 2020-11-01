@@ -25,7 +25,8 @@ def plot_data(df, places, days, mode, column, filename, end_date):
 
 	for index, place in enumerate(places):
 		cumulative_data = df[df[column] == place]
-		counts = cumulative_data.diff(axis=1) # Converts from total case count to daily case count
+		start_column = cumulative_data.columns.get_loc("1/22/20")
+		counts = cumulative_data.iloc[:, start_column:].diff(axis=1) # Converts from total case count to daily case count
 		x_values = list(counts.columns[-days-offset:len(counts.columns)-offset])
 		y_values = [int(counts[col]) for col in x_values]
 

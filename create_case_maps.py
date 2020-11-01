@@ -21,8 +21,9 @@ def plot_global_case_map(filename=None, day=None):
 def create_usa_figure(df, filename, day):
 	day = day if day else yesterday # default to yesterday's date if not provided
 
-	df['state'] = [us_state_abbrev.get(x, None) for x in list(df.index)]
 	df['Cases'] = df.diff(axis=1)[day]
+	df['state'] = [us_state_abbrev.get(x, None) for x in list(df.index)]
+	
 
 	fig = px.choropleth(df,
                     locations="state",
@@ -43,8 +44,8 @@ def create_usa_figure(df, filename, day):
 def create_global_figure(df, filename, day):
 	day = day if day else yesterday # default to yesterday's date if not provided
 
-	df['Country'] = df.index
 	df['Cases'] = df.diff(axis=1)[day]
+	df['Country'] = df.index
 
 	fig = px.choropleth(df,
                     locations="Country",
