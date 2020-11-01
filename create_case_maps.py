@@ -4,8 +4,7 @@ import plotly.express as px
 from datetime import datetime, timedelta
 
 # Local files
-from helper import load_relevant_data
-from us_state_abbrev import us_state_abbrev
+from helper import load_relevant_data, us_state_abbrev
 
 def plot_usa_case_map(filename=None, day=None):
 	df = load_relevant_data()
