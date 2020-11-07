@@ -14,14 +14,14 @@ HEIGHT = 279.4
 
 TEST_DATE = "10/20/20"
 
-def create_title(pdf):
+def create_title(day, pdf):
   # Unicode is not yet supported in the py3k version; use windows-1252 standard font
   pdf.set_font('Arial', '', 24)  
   pdf.ln(60)
   pdf.write(5, f"Covid Analytics Report")
   pdf.ln(10)
   pdf.set_font('Arial', '', 16)
-  pdf.write(4, f'{yesterday}')
+  pdf.write(4, f'{day}')
   pdf.ln(5)
 
 def create_analytics_report(day=TEST_DATE, filename="report.pdf"):
@@ -32,7 +32,7 @@ def create_analytics_report(day=TEST_DATE, filename="report.pdf"):
   ''' First Page '''
   pdf.add_page()
   pdf.image("./resources/letterhead_cropped.png", -3, 0, WIDTH)
-  create_title(pdf)
+  create_title(day, pdf)
 
   plot_usa_case_map("./tmp/usa_cases.png", day=day)
   prev_days = 250
