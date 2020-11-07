@@ -81,7 +81,7 @@ def create_analytics_report(day=TEST_DATE, filename="report.pdf"):
 
 
 if __name__ == '__main__':
-  yesterday = (datetime.today() - timedelta(days=1)).strftime("%m/%d/%y")
+  yesterday = (datetime.today() - timedelta(days=1)).strftime("%m/%d/%y").replace("/0","/").lstrip("0")
   yesterday = "10/10/20" # Uncomment line for testing
   
   create_analytics_report(yesterday)
