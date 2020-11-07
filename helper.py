@@ -19,6 +19,14 @@ def load_relevant_data(us_data=True, mode=Mode.CASES):
 
 	return pd.read_csv(PATH)
 
+def get_state_names():
+    df = load_relevant_data()
+    return df['Province_State'].unique()
+
+def get_country_names():
+    df = load_relevant_data(us_data=False)
+    return df['Country/Region'].unique()
+
 # United States of America Python Dictionary to translate States,
 # Districts & Territories to Two-Letter codes and vice versa.
 #
