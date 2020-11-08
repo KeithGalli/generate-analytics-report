@@ -9,8 +9,8 @@ from daily_counts import plot_daily_count_states, plot_daily_count_countries
 from create_case_maps import plot_usa_case_map, plot_global_case_map
 from helper import Mode
 
-WIDTH = 215.9
-HEIGHT = 279.4
+WIDTH = 210
+HEIGHT = 297
 
 TEST_DATE = "10/20/20"
 
@@ -25,13 +25,13 @@ def create_title(day, pdf):
   pdf.ln(5)
 
 def create_analytics_report(day=TEST_DATE, filename="report.pdf"):
-  pdf = FPDF() # 8.5 x 11 (215.9 by 279.4 mm)
+  pdf = FPDF() # A4 (210 by 297 mm)
 
   states = ['Massachusetts', 'New Hampshire']
 
   ''' First Page '''
   pdf.add_page()
-  pdf.image("./resources/letterhead_cropped.png", -3, 0, WIDTH)
+  pdf.image("./resources/letterhead_cropped.png", 0, 0, WIDTH)
   create_title(day, pdf)
 
   plot_usa_case_map("./tmp/usa_cases.png", day=day)
