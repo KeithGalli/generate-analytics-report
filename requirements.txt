@@ -1,0 +1,6 @@
+fpdf
+pandas
+numpy==1.19.3
+matplotlib
+plotly
+kaleido
